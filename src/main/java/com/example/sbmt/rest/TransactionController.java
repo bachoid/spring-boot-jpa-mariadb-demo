@@ -56,6 +56,10 @@ public class TransactionController {
 		return this.transactionService.findById(id).map(t -> {
 			t.setType(transaction.getType());
 			t.setActor(transaction.getActor());
+		   //TODO: needs better handling of TransactionData
+			t.getTransactionData().forEach(td -> {
+				transaction.getTransactionData().removeIf(tdNew -> td.getKey().equals(tdNew.getKey()) && td.getValue().equals(tdNew.getValue()));
+			});
 			t.setTransactionData(transaction.getTransactionData());
 			return this.transactionService.save(t);
 		}).orElseGet(() -> {

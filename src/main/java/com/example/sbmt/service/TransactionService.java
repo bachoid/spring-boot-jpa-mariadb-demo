@@ -42,12 +42,13 @@ public class TransactionService {
 	public Transaction save(Transaction transaction) {
 		List<TransactionData> tdl = transaction.getTransactionData();
 		transaction.setTransactionData(new ArrayList<>());
-		Transaction tSaved = transactionRepository.save(transaction);
+		final Transaction tSaved = transactionRepository.save(transaction);
 		tdl.forEach(td -> {
 			td.setTransaction(tSaved);
-			tSaved.getTransactionData().add(transactionDataRepository.save(td));
 		});
-		return tSaved;
+		tSaved.getTransactionData().addAll(tdl);
+		Transaction tSaved2 = transactionRepository.save(tSaved);
+		return tSaved2;
 	}
 
 	public Optional<Transaction> findById(Integer id) {
